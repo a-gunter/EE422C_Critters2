@@ -14,6 +14,7 @@ package assignment5;
 import java.util.List;
 
 import assignment5.Critter.CritterShape;
+import javafx.scene.layout.GridPane;
 
 /* see the PDF for descriptions of the methods and fields in this class
  * you may add fields, methods or inner classes to Critter ONLY if you make your additions private
@@ -368,6 +369,9 @@ public abstract class Critter {
 			c.doTimeStep();
 		}
 		
+		// remove dead critters after each Critter has done their timestep
+		removeDead();
+		
 		// do fights ie encounters
 		doEncounters();
 
@@ -390,13 +394,20 @@ public abstract class Critter {
 		babies.clear();
 		
 		//remove dead critters
+		removeDead();
+		
+		// reset all critters' hasMoved/isFighting to false at the end of worldTimeStep
+		for(Critter c : population) {
+			c.hasMoved = false;
+			c.isFighting = false;
+		}
+	}
+	
+	private static void removeDead() {
 		List<Critter> dead = new java.util.ArrayList<Critter>();
 		for(Critter c: population) {
 			if(c.energy <= 0) {
 				dead.add(c);
-			} else {
-				c.hasMoved = false; // at the end of timestep, revert all critters' hasMoved/isFighting to false
-				c.isFighting = false;
 			}
 		}
 		population.removeAll(dead); //other implementation was throwing an exception
@@ -405,39 +416,44 @@ public abstract class Critter {
 	/**
 	 * NEEDS TO BE REMOVED
 	 */
+	
+//	public static void displayWorld() {
+//		String[][] grid = new String[Params.world_width + 2][Params.world_height + 2];
+//		
+//		//set corners
+//		grid[0][0] = "+";
+//		grid[0][Params.world_height + 1] = "+";
+//		grid[Params.world_width + 1][0] = "+";
+//		grid[Params.world_width + 1][Params.world_height + 1] = "+";
+//		
+//		//set border
+//		for(int col = 1;col < Params.world_width + 1;col++) grid[col][0] = "-";
+//		for(int col = 1;col < Params.world_width + 1;col++) grid[col][Params.world_height + 1] = "-";
+//		for(int row = 1;row < Params.world_height + 1;row++) grid[0][row] = "|";
+//		for(int row = 1;row < Params.world_height + 1;row++) grid[Params.world_width + 1][row] = "|";
+//		
+//		//put critters in
+//		for(Critter c: population) {
+//			try {
+//				grid[c.x_coord + 1][c.y_coord + 1] = c.toString(); //compensate for border
+//			} catch(Exception e) {
+//				System.out.println(c.x_coord + " " + c.y_coord);
+//				System.out.println(e);
+//			}
+//		}
+//		
+//		for(int row = 0;row < Params.world_height + 2;row++) {
+//			for(int col = 0;col < Params.world_width + 2;col++) {
+//				if(grid[col][row] == null) System.out.print( " ");
+//				else System.out.print(grid[col][row]);
+//			}
+//			System.out.println();
+//		}
+//		
+//	}
+	
 	public static void displayWorld() {
-		String[][] grid = new String[Params.world_width + 2][Params.world_height + 2];
-		
-		//set corners
-		grid[0][0] = "+";
-		grid[0][Params.world_height + 1] = "+";
-		grid[Params.world_width + 1][0] = "+";
-		grid[Params.world_width + 1][Params.world_height + 1] = "+";
-		
-		//set border
-		for(int col = 1;col < Params.world_width + 1;col++) grid[col][0] = "-";
-		for(int col = 1;col < Params.world_width + 1;col++) grid[col][Params.world_height + 1] = "-";
-		for(int row = 1;row < Params.world_height + 1;row++) grid[0][row] = "|";
-		for(int row = 1;row < Params.world_height + 1;row++) grid[Params.world_width + 1][row] = "|";
-		
-		//put critters in
-		for(Critter c: population) {
-			try {
-				grid[c.x_coord + 1][c.y_coord + 1] = c.toString(); //compensate for border
-			} catch(Exception e) {
-				System.out.println(c.x_coord + " " + c.y_coord);
-				System.out.println(e);
-			}
-		}
-		
-		for(int row = 0;row < Params.world_height + 2;row++) {
-			for(int col = 0;col < Params.world_width + 2;col++) {
-				if(grid[col][row] == null) System.out.print( " ");
-				else System.out.print(grid[col][row]);
-			}
-			System.out.println();
-		}
-		
+		GridPane grid = new GridPane();
 	}
 	
 	/**
@@ -448,16 +464,16 @@ public abstract class Critter {
 	 * @return True if Critter can move, false otherwise.
 	 */
 	private boolean canMove(int direction, int numSteps) {
-		if(this.hasMoved) { // can only move once
+		if(this.hasMoved || this.energy <= 0) { // can only move once, and can't move if dead.
 			return false;
-		} else if(this.isFighting) {  // if fighting, can't move where another critter exists
+		}  else if(this.isFighting) {  // if fighting, can't move where another critter exists
 			if(numSteps == WALK) {
-				if(look(direction, WALK))
+				if(search(direction, WALK) != null)
 					return false;
 				else
 					return true;
 			} else if(numSteps == RUN){
-				if(look(direction, RUN))
+				if(search(direction, RUN) != null)
 					return false;
 				else
 					return true;
@@ -507,12 +523,12 @@ public abstract class Critter {
 	}
 	
 	/**
-	 * "Looks" in the specified direction to see if a space is occupied.
+	 * "Searches" in the specified direction to see if a space is occupied.
 	 * @param direction The direction the look towards
 	 * @param numSteps  1 for walk, 2 for run
-	 * @return True if the space is occupied, false otherwise.
+	 * @return toString() of the occupying Critter if the space is occupied, null otherwise.
 	 */
-	private boolean look(int direction, int numSteps) {
+	private String search(int direction, int numSteps) {
 		if(numSteps == WALK) {
 			switch(direction) {
 			case 0:
@@ -554,7 +570,24 @@ public abstract class Critter {
 			default:
 			}
 		}
-		return true;
+		return null;
+	}
+	
+	/**
+	 * Allows a critter to look in the specified direction during their timestep for the purpose of decision making
+	 * @param direction the direction to look
+	 * @param numSteps false = 1 step (walk distance), true = 2 steps (run distance)
+	 * @return toString() of the occupying Critter if the space is occupied, null otherwise.
+	 */
+	protected String look(int direction, boolean numSteps) {
+		this.energy -= Params.look_energy_cost;
+		
+		if(numSteps == false) {  // false = walk
+			return this.search(direction, WALK);
+		} else if(numSteps == true) {  // true = run
+			return this.search(direction, RUN);
+		}
+		return null;
 	}
 	
 	/**
@@ -564,11 +597,16 @@ public abstract class Critter {
 	 * @param y The y coordinate to check
 	 * @return True if 1 or more critters occupies the space, false otherwise.
 	 */
-	private boolean isOccupied(int x, int y) {
+	private String isOccupied(int x, int y) {
 		for(Critter c : population) {
-			if(c.x_coord == x && c.y_coord == y && c.energy > 0)
-				return true;
+			if(c.x_coord == x && c.y_coord == y && c.energy > 0) {
+				// new rule that Critters all move simultaneously.
+				// This makes look/search function based off of the old position of Critters, unless currently fighting.
+				if(this.isFighting || !c.hasMoved) {
+					return c.toString();
+				}
+			}
 		}
-		return false;
+		return null;
 	}
 }
