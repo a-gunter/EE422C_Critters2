@@ -1,13 +1,22 @@
 package assignment5;
+/* CRITTERS Main.java
+ * EE422C Project 4 submission by
+ * <Matthew Davis>
+ * <mqd224>
+ * <15510>
+ * <Austin Gunter>
+ * <asg2523>
+ * <15510>
+ * Spring 2018
+ */
 
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.VBox;
-import javafx.scene.shape.Line;
-import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.scene.control.*;
 import javafx.geometry.Insets;
@@ -17,8 +26,6 @@ import java.io.File;
 import java.util.ArrayList;
 
 import assignment5.Critter;
-
-
 
 
 public class MainWindow {
@@ -151,7 +158,7 @@ public class MainWindow {
 		sidePanel.getChildren().add(numOfAnimations);
 		VBox.setMargin(numOfAnimations, new Insets(diffHeight/2, 15, diffHeight/2, 15));
 		
-		animSpeed = new Slider(1, 5, 2.5);
+		animSpeed = new Slider(1, 9, 5);
 		animSpeed.setPrefWidth(prefWidth);
 		sidePanel.getChildren().add(animSpeed);
 		sidePanel.getChildren().add(new Separator());
@@ -162,7 +169,6 @@ public class MainWindow {
 		runStatsBtn.setPrefWidth(prefWidth);
 		sidePanel.getChildren().add(runStatsBtn);
 		VBox.setMargin(runStatsBtn, mainInsets);
-		runStatsBtn.setDisable(true);
 		
 		sidePanel.getChildren().add(statsCheckBoxes); //for stats
 		sidePanel.getChildren().add(new Separator());
@@ -215,20 +221,13 @@ public class MainWindow {
 		return ret;
 	}
 	
-	
-	/*
-	 * Paints the border kind of couldnt really get it to work
+	/**
+	 * Sets items in side panel to value b
+	 * @param b Booelan
 	 */
-	public static void paint() {
-		grid.getChildren().clear(); // clean up grid.
-		double vert = grid.getWidth()/(Params.world_width + 1);
-		double hoz = grid.getHeight()/(Params.world_height + 1);
-		
-		for(int col = 1;col < Params.world_width + 1;col++) grid.add(new Rectangle(0, vert, 0, vert), col, 0); 
-		for(int col = 1;col < Params.world_width + 1;col++) grid.add(new Line(0, vert, 0, vert), col, Params.world_height + 1);
-		for(int row = 1;row < Params.world_height + 1;row++) grid.add(new Line(0, hoz, 0, hoz), 0, row); 
-		for(int row = 1;row < Params.world_height + 1;row++) grid.add(new Line(0, hoz, 0, hoz), Params.world_width + 1, row);
-		
-		
+	public static void setButtons(boolean b) {
+		for(Node n: sidePanel.getChildren()) {
+			n.setDisable(!b);
+		}
 	}
 }

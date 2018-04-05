@@ -1,5 +1,5 @@
 package assignment5;
-/* CRITTERS Main.java
+/* CRITTERS Critter1.java
  * EE422C Project 4 submission by
  * <Matthew Davis>
  * <mqd224>
@@ -11,7 +11,8 @@ package assignment5;
  */
 
 /**
- * Critter that does some random stuff
+ * Critter that does some random stuff, only walks somewhere if no one is there, 
+ * tries to reproduce with 50/50 odds
  * @author Matt
  *
  */
@@ -44,7 +45,11 @@ public class Critter1 extends Critter{
 	 */
 	@Override
 	public void doTimeStep() {
-		walk(dir);
+		if(this.look(dir,  false) == null) {
+			walk(dir);
+		} else {
+			walk((dir + 4) % 8);
+		}
 		
 		if(flip) {
 			dir = (dir + 2) % 8;

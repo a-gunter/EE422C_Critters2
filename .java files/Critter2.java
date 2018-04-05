@@ -1,6 +1,4 @@
 package assignment5;
-
-
 /* CRITTERS Critter2.java
  * EE422C Project 4 submission by
  * <Matthew Davis>
@@ -64,10 +62,14 @@ public class Critter2 extends Critter{
 			reproduce(kid, (dir + 2) % 8);
 			return true;
 		case "3":
-			walk(dir);
+			for(int d = dir; d != (dir - 1)%8;dir = (dir + 1)%8) //tries to find a space with no critter
+				if(this.look(d,  false) == null)
+					walk(d);
 			return false;
 		case "4":
-			run((dir + 4) % 8);
+			for(int d = (dir + 4) % 8; d != (dir + 3)%8;dir = (dir + 1)%8) //tries to find a space with no critter
+				if(this.look(d,  false) == null)
+					run(d);
 			return false;
 		default:
 			return true;

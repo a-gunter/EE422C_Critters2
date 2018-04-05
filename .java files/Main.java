@@ -12,8 +12,6 @@ package assignment5;
 
 import java.lang.reflect.Method;
 
-//import java.util.ArrayList;
-
 import assignment5.Critter;
 import javafx.application.Application;
 import javafx.geometry.Insets;
@@ -21,7 +19,6 @@ import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import java.util.concurrent.TimeUnit;
 
 public class Main extends Application {
 	
@@ -97,7 +94,7 @@ public class Main extends Application {
      * @param input Input from keyboard
      */
     private static void errorProcessing(String input) {
-    	System.out.print("error processing: " + input); //need to fix
+    	System.out.println("error processing: " + input); //need to fix
     }
     
     /**
@@ -136,7 +133,6 @@ public class Main extends Application {
 				System.out.println(numCritters + " " + critter + "s made!");
 				Critter.displayWorld();
 				//add checkbox for runstats
-				if(MainWindow.runStatsBtn.isDisabled()) MainWindow.runStatsBtn.setDisable(false);
 				boolean containCheck = false;
 				for(Node n: MainWindow.statsCheckBoxes.getChildren()) {
 					CheckBox c = (CheckBox) n;
