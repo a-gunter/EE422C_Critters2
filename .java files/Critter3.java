@@ -75,15 +75,22 @@ public class Critter3 extends Critter{
 	}
 
 	/**
-	 * Only accepts fights if his energy is >= start_energy / 4.
+	 * Accepts the fight if energy is >= start_energy / 4.
+	 * If low on energy, looks to see if 1 spot is occupied.
+	 * If not occupied, then Critter3 runs to that spot. If occupied, then Critter3 accepts the fight instead of trying to run.
 	 */
 	@Override
 	public boolean fight(String opponent) {
 		if(getEnergy() >= (Params.start_energy / 4)) {
 			return true;
 		} else {
-			run(dir);
-			return false;
+			String occupied = look(dir, true);
+			if(occupied != null) {
+				return true;
+			} else {
+				run(dir);
+				return false;
+			}
 		}
 	}
 	

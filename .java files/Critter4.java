@@ -33,14 +33,21 @@ public class Critter4 extends Critter{
 	}
 	
 	/**
-	 * Only moves sometimes, and when he does move, he runs.
+	 * Only moves about half of the time.
+	 * When Critter4 decides to move, checks to see if another Critter occupies the spot it would move to.
+	 * Critter4 will only move whenever there's another Critter to fight at that spot.
 	 */
 	@Override
 	public void doTimeStep() {
 		int shouldRun = Critter.getRandomInt(2);
 		if(shouldRun == 1) {
-			run(dir);
-			dir = Critter.getRandomInt(8);
+			String occupied = look(dir, true);
+			if(occupied != null) {
+				run(dir);
+				dir = Critter.getRandomInt(8);
+			} else {
+				dir = Critter.getRandomInt(8);
+			}
 		}
 	}
 
