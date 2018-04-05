@@ -6,10 +6,8 @@ import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.VBox;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.shape.Shape;
 import javafx.stage.Stage;
 import javafx.scene.control.*;
 import javafx.geometry.Insets;
@@ -31,6 +29,8 @@ public class MainWindow {
 	private static Label controlsLabel;
 	static TextField numOfSteps;
 	static TextField numOfCritter;
+	static TextField numOfAnimations;
+	static Slider animSpeed;
 	static TextField seed;
 	static ComboBox<String> chooseCritter;
 	static Button stepBtn;
@@ -43,6 +43,7 @@ public class MainWindow {
 	private static String myPackage;
 	static int prefWidth = 125;
 	static int diffHeight = 8;
+	static Anim myAnim;
 	
 	// Gets the package name.  The usage assumes that Critter and its subclasses are all in the same package.
     static {
@@ -143,8 +144,18 @@ public class MainWindow {
 		showBtn = new Button("Animate");
 		showBtn.setPrefWidth(prefWidth);
 		sidePanel.getChildren().add(showBtn);
+		VBox.setMargin(showBtn, new Insets(diffHeight, 15, diffHeight/2, 15));
+		
+		numOfAnimations = new TextField("1");
+		numOfAnimations.setPrefWidth(prefWidth);
+		sidePanel.getChildren().add(numOfAnimations);
+		VBox.setMargin(numOfAnimations, new Insets(diffHeight/2, 15, diffHeight/2, 15));
+		
+		animSpeed = new Slider(1, 5, 2.5);
+		animSpeed.setPrefWidth(prefWidth);
+		sidePanel.getChildren().add(animSpeed);
 		sidePanel.getChildren().add(new Separator());
-		VBox.setMargin(showBtn, mainInsets);
+		VBox.setMargin(animSpeed, new Insets(diffHeight/2, 15, diffHeight, 15));
 		
 		//run stats button
 		runStatsBtn = new Button("Stats");
@@ -155,6 +166,11 @@ public class MainWindow {
 		
 		sidePanel.getChildren().add(statsCheckBoxes); //for stats
 		sidePanel.getChildren().add(new Separator());
+		
+		CheckBox newCheckBox = new CheckBox("Algae");
+		newCheckBox.setPrefWidth(prefWidth);
+		statsCheckBoxes.getChildren().add(newCheckBox);
+		VBox.setMargin(newCheckBox, new Insets(0, 15, MainWindow.diffHeight, 15));
 		
 		//seed button
 		seedBtn = new Button("Seed");
@@ -213,12 +229,6 @@ public class MainWindow {
 		for(int row = 1;row < Params.world_height + 1;row++) grid.add(new Line(0, hoz, 0, hoz), 0, row); 
 		for(int row = 1;row < Params.world_height + 1;row++) grid.add(new Line(0, hoz, 0, hoz), Params.world_width + 1, row);
 		
-		/*
-		for (int i = 0; i < Params.; i++) {
-			Shape s = getIcon(i);	// convert the index to an icon.
-			grid.add(s, i, i); // add the shape to the grid.
-		}
-		*/
 		
 	}
 }

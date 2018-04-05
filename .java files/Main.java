@@ -21,6 +21,7 @@ import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import java.util.concurrent.TimeUnit;
 
 public class Main extends Application {
 	
@@ -72,8 +73,7 @@ public class Main extends Application {
 		
 		//show button (animation stuff)
 		MainWindow.showBtn.setOnAction(e->{
-			//something random rn
-			MainWindow.paint();
+			animateButton();
 		});
 		
 		//run stats button
@@ -116,7 +116,7 @@ public class Main extends Application {
 				System.out.println("Input must be greater than 0");
 		} catch(Exception ex) {
 			errorProcessing(MainWindow.numOfSteps.getText());
-			MainWindow.seed.setText("");
+			MainWindow.numOfSteps.setText("1");
 		}
     }
     
@@ -129,10 +129,12 @@ public class Main extends Application {
     	try {
 			String critter = MainWindow.chooseCritter.getValue().toString();
 			if(critter != null || !critter.isEmpty()) {
-				for(int i = 0;i < Integer.parseInt(MainWindow.numOfCritter.getText());i++) {
+				int numCritters = Integer.parseInt(MainWindow.numOfCritter.getText());
+				for(int i = 0;i < numCritters;i++) {
 					Critter.makeCritter(critter);
-					System.out.println("Critter Made!");
 				}
+				System.out.println(numCritters + " " + critter + "s made!");
+				Critter.displayWorld();
 				//add checkbox for runstats
 				if(MainWindow.runStatsBtn.isDisabled()) MainWindow.runStatsBtn.setDisable(false);
 				boolean containCheck = false;
@@ -160,6 +162,25 @@ public class Main extends Application {
     }
 	
 	/**
+	 * Animates for given frames
+	 */
+	private static void animateButton() {
+		try {
+			int steps = Integer.parseInt(MainWindow.numOfAnimations.getText());
+			if(steps > 0) {
+				System.out.println(steps + " timesteps");
+				MainWindow.myAnim = new Anim(steps, MainWindow.animSpeed.getValue());
+				MainWindow.myAnim.start();
+				runStatsButton();
+			} else 
+				System.out.println("Input must be greater than 0");
+		} catch(Exception ex) {
+			errorProcessing(MainWindow.numOfAnimations.getText());
+			MainWindow.numOfSteps.setText("1");
+		}	
+	}
+	
+	/**
 	 * Does runstats for the critters checked
 	 */
 	private static void runStatsButton() {
@@ -183,8 +204,10 @@ public class Main extends Application {
 	private static void seedButton() {
 		try {
 			int seed = Integer.parseInt(MainWindow.seed.getText());
-			if(seed > 0)
+			if(seed > 0) {
 				Critter.setSeed(seed);
+				System.out.println("Random num generator seeded with " + seed);
+			}
 			else 
 				System.out.println("Input must be greater than 0");
 		} catch(Exception ex) {
