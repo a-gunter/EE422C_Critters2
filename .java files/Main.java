@@ -111,6 +111,7 @@ public class Main extends Application {
 				System.out.println(steps + " timesteps");
 				for(int i = 0; i < steps; i++)
 					Critter.worldTimeStep();
+				Critter.displayWorld();
 			} else 
 				System.out.println("Input must be greater than 0");
 		} catch(Exception ex) {

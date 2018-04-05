@@ -105,6 +105,9 @@ public class Critter3 extends Critter{
 	
 	//you can change this i just added it to remove the error
 	@Override
-	public CritterShape viewShape() { return CritterShape.STAR; }
+	public CritterShape viewShape() { return CritterShape.CIRCLE; }
+	
+	@Override
+	public javafx.scene.paint.Color viewColor() { return javafx.scene.paint.Color.CYAN; }
 	
 }

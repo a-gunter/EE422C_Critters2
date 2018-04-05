@@ -15,6 +15,10 @@ import java.util.List;
 
 import assignment5.Critter.CritterShape;
 import javafx.scene.layout.GridPane;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Polygon;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Shape;
 
 /* see the PDF for descriptions of the methods and fields in this class
  * you may add fields, methods or inner classes to Critter ONLY if you make your additions private
@@ -453,7 +457,64 @@ public abstract class Critter {
 //	}
 	
 	public static void displayWorld() {
-		GridPane grid = new GridPane();
+		//GridPane grid = new GridPane();
+		MainWindow.grid.getChildren().clear();
+		double gridCellSize = MainWindow.grid.getWidth() / Params.world_width;
+		if (!population.isEmpty()) {
+			for (Critter c : population) {
+				if (c.energy > 0) {
+					CritterShape cShape = c.viewShape();
+					switch (cShape) {
+					case CIRCLE:
+						Circle circle = new Circle(gridCellSize / 2);
+						circle.setStroke(c.viewOutlineColor());
+						circle.setFill(c.viewFillColor());
+						MainWindow.grid.add(circle, c.x_coord, c.y_coord);
+						break;
+					case SQUARE:
+						Rectangle rect = new Rectangle(gridCellSize, gridCellSize);
+						rect.setStroke(c.viewOutlineColor());
+						rect.setFill(c.viewFillColor());
+						MainWindow.grid.add(rect, c.x_coord, c.y_coord);
+						break;
+					case TRIANGLE:
+						Polygon triangle = new Polygon();
+						triangle.setStroke(c.viewOutlineColor());
+						triangle.setFill(c.viewFillColor());
+						Double[] verticesT = new Double[] {0.0, gridCellSize, gridCellSize, gridCellSize, gridCellSize / 2, 0.0};
+						triangle.getPoints().addAll(verticesT);
+						MainWindow.grid.add(triangle, c.x_coord, c.y_coord);
+						break;
+					case DIAMOND:
+						Polygon diamond = new Polygon();
+						diamond.setStroke(c.viewOutlineColor());
+						diamond.setFill(c.viewFillColor());
+						Double[] verticesD = new Double[] {gridCellSize / 2, 0.0, 0.0, gridCellSize / 2, gridCellSize / 2, gridCellSize, gridCellSize, gridCellSize / 2};
+						diamond.getPoints().addAll(verticesD);
+						MainWindow.grid.add(diamond, c.x_coord, c.y_coord);
+						break;
+					case STAR:
+						Polygon star = new Polygon();
+						star.setStroke(c.viewOutlineColor());
+						star.setFill(c.viewFillColor());
+						Double[] verticesS = new Double[] {0.5*gridCellSize, 0.0,
+														   0.4*gridCellSize, 0.3*gridCellSize,
+														   0.0, 0.3*gridCellSize,
+														   0.3*gridCellSize, 0.55*gridCellSize,
+														   0.2*gridCellSize, gridCellSize,
+														   0.5*gridCellSize, 0.7*gridCellSize,
+														   0.8*gridCellSize, gridCellSize,
+														   0.7*gridCellSize, 0.55*gridCellSize,
+														   gridCellSize, 0.3*gridCellSize,
+														   0.6*gridCellSize, 0.3*gridCellSize
+														   };
+						star.getPoints().addAll(verticesS);
+						MainWindow.grid.add(star, c.x_coord, c.y_coord);
+						break;
+					}
+				}
+			} 
+		}
 	}
 	
 	/**

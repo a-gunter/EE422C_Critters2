@@ -2,7 +2,9 @@ package assignment5;
 
 import javafx.scene.Scene;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
@@ -25,7 +27,7 @@ public class MainWindow {
 	private static BorderPane bPane = new BorderPane();
 	private static VBox sidePanel = new VBox();
 	static VBox statsCheckBoxes = new VBox();
-	private static GridPane grid = new GridPane();
+	protected static GridPane grid = new GridPane();
 	private static Label controlsLabel;
 	static TextField numOfSteps;
 	static TextField numOfCritter;
@@ -57,6 +59,24 @@ public class MainWindow {
 		grid.setGridLinesVisible(true);
 		sidePanel.setStyle("-fx-border-color: black;-fx-font-family: \"Courier New\"");
 		sidePanelInit();
+		
+		// test setup for grid
+		double testWidth = 520;
+		double testHeight = 520;
+		grid.setMaxHeight(testHeight);
+		grid.setMaxWidth(testWidth);
+		for(int i = 0; i < Params.world_height; i++) {
+			RowConstraints constr = new RowConstraints(testHeight / Params.world_width);
+//			RowConstraints constr = new RowConstraints();
+//			constr.setPercentHeight(Params.world_height);
+			grid.getRowConstraints().add(constr);
+		}
+		for(int i = 0; i < Params.world_width; i++) {
+			ColumnConstraints constr = new ColumnConstraints(testWidth / Params.world_width);
+//			ColumnConstraints constr = new ColumnConstraints();
+//			constr.setPercentWidth(Params.world_width);
+			grid.getColumnConstraints().add(constr);
+		}
 		
 		//text stuff
 		TextArea console = new TextArea();
