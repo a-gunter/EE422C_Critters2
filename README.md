@@ -2,8 +2,8 @@
 Part 2 of Critters
 
 
-Critter1 - 
-Critter2 - 
+Critter1 - Uses "look" inside of timeStep, Shape is an orange diamond.
+Critter2 - Uses "look" inside of fight, Shape is a hotpink square.
 Critter3 - Uses "look" inside of fight, but not in timeStep. Shape is a cyan circle.
 Critter4 - Uses "look" inside of timeStep, but not in fight. Shape is a red triangle.
 
@@ -22,6 +22,16 @@ Controller/GUI Features
    
 Team Plan:
 Matt:
+  -Made GUI
+    -Added buttons to implement step, make, show, stats, seed, and quit
+    -Added text fields and applicable functionallity for buttons
+    -Made checkboxes for runstats
+    -Added text field to give user output text
+  -Animation
+    -Added timer for animation
+    -Disables buttons during animation
+    -Added sliddr to adjust speed of animation
+  -Changed Critter1 and Critter2 to comply with Critters part 2 requirements
 
 Austin:
   -Changed model
